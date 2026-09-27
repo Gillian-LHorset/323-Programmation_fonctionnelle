@@ -1,6 +1,7 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using DataSeries;
 using ESportApp;
+using System.Linq;
 
 DataSeries<DataPoint<ValorantMatch>> valorant;
 DataSeries<DataPoint<Cs2Match>> cs2;
@@ -38,8 +39,15 @@ DataSeries<DataPoint<LolMatch>> noeswins = DataSeries<DataPoint<LolMatch>>.From(
 //Console.WriteLine(noeswins);
 
 // ex2-etape2
-var raphaelGenerated = MatchGenerator.GenerateCs2("Raphaël", 20);
-Console.WriteLine(raphaelGenerated.Count); // 20
+Func<Cs2Match, bool> isValid = m =>
+    m.Kills + m.Assists <= 50 &&
+    m.Deaths >= 1;
+
+var raphaelGenerated = MatchGenerator.GenerateCs2("Raphaël", 20).ToList();
+
+var raphaelValid = raphaelGenerated.Where(isValid);
+Console.WriteLine($"Avant : {raphaelGenerated.Count}, après : {raphaelValid.Count()}");
+
 
 Console.ReadKey();
 
@@ -56,27 +64,24 @@ DataPoint<LolMatch> ParseLoL(string[] cols) {
 }
 
 public static class MatchGenerator {
-    public static DataSeries<DataPoint<Cs2Match>> GenerateCs2(string player, int count, int seed = 42) {
+    public static IEnumerable<Cs2Match> GenerateCs2(string player, int count, int seed = 42) {
         var rng = new Random(seed);
         var maps = new[] { "Dust2", "Mirage", "Inferno", "Nuke", "Ancient" };
         var sides = new[] { "CT", "T" };
         var start = new DateTime(2023, 9, 1);
 
-        return DataSeries<DataPoint<Cs2Match>>.From(
-            Enumerable.Range(1, count)
-                .Select(i => new DataPoint<Cs2Match>(
-                    start.AddDays(i),
-                    new Cs2Match(
-                        player,
-                        maps[rng.Next(maps.Length)],
-                        sides[rng.Next(2)],
-                        rng.Next(10, 28),   // kills
-                        rng.Next(6, 18),    // deaths
-                        rng.Next(0, 8),     // assists
-                        rng.Next(0, 5),     // mvps
-                        rng.Next(2) == 0    // won
-                    )
-                ))
+        return Enumerable.Range(1, count)
+            .Select(i => new Cs2Match(
+                    player,
+                    maps[rng.Next(maps.Length)],
+                    sides[rng.Next(2)],
+                    rng.Next(10, 28),   // kills
+                    rng.Next(6, 18),    // deaths
+                    rng.Next(0, 8),     // assists
+                    rng.Next(0, 5),     // mvps
+                    rng.Next(2) == 0    // won
+                )
+                
         );
     }
 }
