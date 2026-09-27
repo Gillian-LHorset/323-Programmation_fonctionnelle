@@ -48,6 +48,8 @@ var raphaelGenerated = MatchGenerator.GenerateCs2("Raphaël", 20).ToList();
 var raphaelValid = raphaelGenerated.Where(isValid);
 Console.WriteLine($"Avant : {raphaelGenerated.Count}, après : {raphaelValid.Count()}");
 
+ExportCs2("Maurice", raphaelValid, @"data\createdCs2Match.csv");
+Console.WriteLine("Matchs inscrit dans le fichier.");
 
 Console.ReadKey();
 
@@ -61,6 +63,14 @@ DataPoint<Cs2Match> ParseCS2(string[] cols) {
 }
 DataPoint<LolMatch> ParseLoL(string[] cols) {
     return new DataPoint<LolMatch>(DateTime.Parse(cols[0]), new LolMatch(cols[1], cols[2], int.Parse(cols[4]), int.Parse(cols[5]), int.Parse(cols[6]), int.Parse(cols[7]), int.Parse(cols[8]), bool.Parse(cols[9])));
+}
+
+void ExportCs2(string player, IEnumerable<Cs2Match> matches, string path)
+{
+    var header = "date,player,map,start_side,kills,deaths,assists,mvps,won";
+    var lines = matches.Select((m) => $"2026-09-27,{m.Player},{m.Map},{m.StartSide},{m.Kills},{m.Deaths},{m.Assists},{m.Mvps},{m.Won}"
+    );
+    File.WriteAllLines(path, lines.Prepend(header));
 }
 
 public static class MatchGenerator {
