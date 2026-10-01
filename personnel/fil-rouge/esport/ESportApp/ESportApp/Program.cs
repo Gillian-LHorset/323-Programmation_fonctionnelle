@@ -8,16 +8,28 @@ DataSeries<ValorantMatch> valorant;
 DataSeries<Cs2Match> cs2;
 DataSeries<LolMatch> lol;
 
-valorant = DataSeries<ValorantMatch>.FromCsv(@"data\valorant.csv", ParseValorant);
-cs2 = DataSeries<Cs2Match>.FromCsv(@"data\cs2.csv", ParseCS2);
-lol = DataSeries<LolMatch>.FromCsv(@"data\Lol.csv", ParseLoL);
+valorant = DataSeries<ValorantMatch>.FromCsv(@"C:\Users\pq60soi\Desktop\323-Programmation_fonctionnelle\personnel\fil-rouge\esport\ESportApp\ESportApp\data\valorant.csv", ParseValorant);
+cs2 = DataSeries<Cs2Match>.FromCsv(@"C:\Users\pq60soi\Desktop\323-Programmation_fonctionnelle\personnel\fil-rouge\esport\ESportApp\ESportApp\data\cs2.csv", ParseCS2);
+lol = DataSeries<LolMatch>.FromCsv(@"C:\Users\pq60soi\Desktop\323-Programmation_fonctionnelle\personnel\fil-rouge\esport\ESportApp\ESportApp\data\Lol.csv", ParseLoL);
 
 if (args.Length == 0 || args.Contains("--help")) {
-    Console.WriteLine("Commands : [--game valorant|cs2|lol]");
+    Console.WriteLine("Commands :");
+    Console.WriteLine("[--game valorant|cs2|lol]");
+    Console.WriteLine("[--generate player]");
     return;
 }
 
 string? game = args[Array.IndexOf(args, "--game") + 1];
+string? playerToGenerate = args[Array.IndexOf(args, "--generate") + 1];
+
+
+if (playerToGenerate is not null) {
+    // ne génère uniquement des matchs cs2
+    var generateMatch = MatchGenerator.GenerateCs2(playerToGenerate, 5).ToList();
+    generateMatch.ForEach(m => Console.WriteLine(m.ToString()));
+    //Console.ReadKey();
+    return;
+}
 
 switch (game) {
     case "valorant":
@@ -76,7 +88,6 @@ switch (game) {
 //    m.Kills + m.Assists <= 50 &&
 //    m.Deaths >= 1;
 
-//var raphaelGenerated = MatchGenerator.GenerateCs2("Raphaël", 20).ToList();
 
 //var raphaelValid = raphaelGenerated.Where(isValid);
 //Console.WriteLine($"Avant : {raphaelGenerated.Count}, après : {raphaelValid.Count()}");
@@ -85,7 +96,7 @@ switch (game) {
 //Console.WriteLine("Matchs inscrit dans le fichier.");
 
 Console.WriteLine("Fin du programme.");
-Console.ReadKey();
+//Console.ReadKey();
 
 ValorantMatch ParseValorant(string[] cols) {
     return new ValorantMatch(

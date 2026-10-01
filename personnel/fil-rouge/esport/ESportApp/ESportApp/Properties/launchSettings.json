@@ -1,8 +1,7 @@
 {
   "profiles": {
     "ESportApp": {
-      "commandName": "Project",
-      "commandLineArgs": "--game valorant"
+      "commandName": "Project"
     }
   }
 }
