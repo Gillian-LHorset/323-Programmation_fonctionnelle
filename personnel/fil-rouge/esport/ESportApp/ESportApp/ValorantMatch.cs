@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DataSeries
-{
-    public class ValorantMatch
-    {
+﻿namespace DataSeries {
+    public class ValorantMatch {
         public string Player { get; }
         public string Agent { get; }
         public int Kills { get; }
@@ -18,8 +10,7 @@ namespace DataSeries
         public bool Won { get; }
 
         public ValorantMatch(string player, string agent, int kills, int deaths,
-                     int assists, int headshots, int roundsWon, bool won)
-        {
+                     int assists, int headshots, int roundsWon, bool won) {
             Player = player;
             Agent = agent;
             Kills = kills;
@@ -28,6 +19,9 @@ namespace DataSeries
             Headshots = headshots;
             RoundsWon = roundsWon;
             Won = won;
+        }
+        public override string ToString() {
+            return $"Date: Player: {Player}, Agent: {Agent}, Kills: {Kills}, Deaths: {Deaths}, Assists: {Assists}, Headshots: {Headshots}, Rounds Won: {RoundsWon}, Won: {Won}";
         }
     }
 }

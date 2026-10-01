@@ -1,72 +1,131 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using DataSeries;
 using ESportApp;
-using System.Linq;
 
-DataSeries<DataPoint<ValorantMatch>> valorant;
-DataSeries<DataPoint<Cs2Match>> cs2;
-DataSeries<DataPoint<LolMatch>> lol;
+Console.WriteLine("Lancement du programme.");
 
-valorant = DataSeries<DataPoint<ValorantMatch>>.FromCsv(@"data\valorant.csv", ParseValorant);
-cs2 = DataSeries<DataPoint<Cs2Match>>.FromCsv(@"data\cs2.csv", ParseCS2);
-lol = DataSeries<DataPoint<LolMatch>>.FromCsv(@"data\Lol.csv", ParseLoL);
+DataSeries<ValorantMatch> valorant;
+DataSeries<Cs2Match> cs2;
+DataSeries<LolMatch> lol;
 
-Console.WriteLine($"Il y a  {valorant.Count} matches dans la série Valorant"); // 3
-Console.WriteLine($"Il y a  {cs2.Count} matches dans la série CS2"); // 3
-Console.WriteLine($"Il y a  {lol.Count} matches dans la série LoL"); // 3
+valorant = DataSeries<ValorantMatch>.FromCsv(@"data\valorant.csv", ParseValorant);
+cs2 = DataSeries<Cs2Match>.FromCsv(@"data\cs2.csv", ParseCS2);
+lol = DataSeries<LolMatch>.FromCsv(@"data\Lol.csv", ParseLoL);
 
-var biggame = valorant.Values
-    .Where(vm => vm.Value.Player == "Léa")
-    .Where(vm => vm.Value.Kills >= 20)
-    .Where(vm => vm.Value.Assists >= 5)
-    .OrderBy(vm => vm.Timestamp)
-    .Last();
-Console.WriteLine(biggame.Timestamp.ToString("dd/MM/yyyy") + " : " + biggame.Value.Player + " a fait un gros match avec " + biggame.Value.Kills + " kills et " + biggame.Value.Assists + " assists.");
+if (args.Length == 0 || args.Contains("--help")) {
+    Console.WriteLine("Commands : [--game valorant|cs2|lol]");
+    return;
+}
 
-ValorantMatch dylanthird = valorant.Values
-    .Where(ValorantMatch => ValorantMatch.Value.Player == "Dylan")
-    .ElementAt(3)
-    .Value;
-Console.WriteLine("Dans son 4ème match, Dylan a fait " + dylanthird.Kills + " kills.");
+string? game = args[Array.IndexOf(args, "--game") + 1];
 
-DataSeries<DataPoint<LolMatch>> noeswins = DataSeries<DataPoint<LolMatch>>.From(
-    lol
-    .Values
-    .Where(lolmatch => lolmatch.Value.Player == "Noé" && lolmatch.Value.Won)
-    .ToList()
-    );
+switch (game) {
+    case "valorant":
+        Console.WriteLine("Valorant match\ndate,player,agent,kills,deaths,assists,headshots,rounds_won,won");
+        Console.WriteLine(valorant.ToString());
+        break;
+    case "cs2":
+        Console.WriteLine("Cs2 matchs\ndate,player,map,start_side,kills,deaths,assists,mvps,won");
+        Console.WriteLine(cs2.ToString());
+        break;
+    case "lol":
+        Console.WriteLine("Lol matchs\ndate,player,champion,role,kills,deaths,assists,cs,vision_score,won");
+        Console.WriteLine(lol.ToString());
+        break;
+    default:
+        Console.WriteLine("Valorant match\ndate,player,agent,kills,deaths,assists,headshots,rounds_won,won");
+        Console.WriteLine(valorant.ToString());
+        Console.WriteLine("Cs2 matchs\ndate,player,map,start_side,kills,deaths,assists,mvps,won");
+        Console.WriteLine(cs2.ToString());
+        Console.WriteLine("Lol matchs\ndate,player,champion,role,kills,deaths,assists,cs,vision_score,won");
+        Console.WriteLine(lol.ToString());
+        break;
+}
 
-//Console.WriteLine(noeswins);
 
-// ex2-etape2
-Func<Cs2Match, bool> isValid = m =>
-    m.Kills + m.Assists <= 50 &&
-    m.Deaths >= 1;
 
-var raphaelGenerated = MatchGenerator.GenerateCs2("Raphaël", 20).ToList();
+//Console.WriteLine($"Il y a  {valorant.Count} matches dans la série Valorant"); // 3
+//Console.WriteLine($"Il y a  {cs2.Count} matches dans la série CS2"); // 3
+//Console.WriteLine($"Il y a  {lol.Count} matches dans la série LoL"); // 3
 
-var raphaelValid = raphaelGenerated.Where(isValid);
-Console.WriteLine($"Avant : {raphaelGenerated.Count}, après : {raphaelValid.Count()}");
+//var biggame = valorant.Values
+//    .Where(vm => vm.Value.Player == "Léa")
+//    .Where(vm => vm.Value.Kills >= 20)
+//    .Where(vm => vm.Value.Assists >= 5)
+//    .OrderBy(vm => vm.Timestamp)
+//    .Last();
+//Console.WriteLine(biggame.Timestamp.ToString("dd/MM/yyyy") + " : " + biggame.Value.Player + " a fait un gros match avec " + biggame.Value.Kills + " kills et " + biggame.Value.Assists + " assists.");
 
-ExportCs2("Maurice", raphaelValid, @"data\createdCs2Match.csv");
-Console.WriteLine("Matchs inscrit dans le fichier.");
+//ValorantMatch dylanthird = valorant.Values
+//    .Where(ValorantMatch => ValorantMatch.Value.Player == "Dylan")
+//    .ElementAt(3)
+//    .Value;
+//Console.WriteLine("Dans son 4ème match, Dylan a fait " + dylanthird.Kills + " kills.");
 
+//DataSeries<DataPoint<LolMatch>> noeswins = DataSeries<DataPoint<LolMatch>>.From(
+//    lol
+//    .Values
+//    .Where(lolmatch => lolmatch.Value.Player == "Noé" && lolmatch.Value.Won)
+//    .ToList()
+//    );
+
+////Console.WriteLine(noeswins);
+
+//// ex2-etape2
+//Func<Cs2Match, bool> isValid = m =>
+//    m.Kills + m.Assists <= 50 &&
+//    m.Deaths >= 1;
+
+//var raphaelGenerated = MatchGenerator.GenerateCs2("Raphaël", 20).ToList();
+
+//var raphaelValid = raphaelGenerated.Where(isValid);
+//Console.WriteLine($"Avant : {raphaelGenerated.Count}, après : {raphaelValid.Count()}");
+
+//ExportCs2("Maurice", raphaelValid, @"data\createdCs2Match.csv");
+//Console.WriteLine("Matchs inscrit dans le fichier.");
+
+Console.WriteLine("Fin du programme.");
 Console.ReadKey();
 
-DataPoint<ValorantMatch> ParseValorant(string[] cols) {
-    ValorantMatch match = new ValorantMatch(cols[1], cols[2], int.Parse(cols[3]), int.Parse(cols[4]), int.Parse(cols[5]), int.Parse(cols[6]), int.Parse(cols[7]), bool.Parse(cols[8]));
-    DateTime date = DateTime.Parse(cols[0]);
-    return new DataPoint<ValorantMatch>(date, match);
+ValorantMatch ParseValorant(string[] cols) {
+    return new ValorantMatch(
+        cols[1],
+        cols[2],
+        int.Parse(cols[3]),
+        int.Parse(cols[4]),
+        int.Parse(cols[5]),
+        int.Parse(cols[6]),
+        int.Parse(cols[7]),
+        bool.Parse(cols[8])
+    );
 }
-DataPoint<Cs2Match> ParseCS2(string[] cols) {
-    return new DataPoint<Cs2Match>(DateTime.Parse(cols[0]), new Cs2Match(cols[1], cols[2], cols[3], int.Parse(cols[4]), int.Parse(cols[5]), int.Parse(cols[6]), int.Parse(cols[7]), bool.Parse(cols[8])));
-}
-DataPoint<LolMatch> ParseLoL(string[] cols) {
-    return new DataPoint<LolMatch>(DateTime.Parse(cols[0]), new LolMatch(cols[1], cols[2], int.Parse(cols[4]), int.Parse(cols[5]), int.Parse(cols[6]), int.Parse(cols[7]), int.Parse(cols[8]), bool.Parse(cols[9])));
+Cs2Match ParseCS2(string[] cols) {
+    return new Cs2Match(
+        cols[1],
+        cols[2],
+        cols[3],
+        int.Parse(cols[4]),
+        int.Parse(cols[5]),
+        int.Parse(cols[6]),
+        int.Parse(cols[7]),
+        bool.Parse(cols[8])
+    );
 }
 
-void ExportCs2(string player, IEnumerable<Cs2Match> matches, string path)
-{
+LolMatch ParseLoL(string[] cols) {
+    return new LolMatch(
+        cols[1],
+        cols[2],
+        int.Parse(cols[4]),
+        int.Parse(cols[5]),
+        int.Parse(cols[6]),
+        int.Parse(cols[7]),
+        int.Parse(cols[8]),
+        bool.Parse(cols[9])
+    );
+}
+
+void ExportCs2(string player, IEnumerable<Cs2Match> matches, string path) {
     var header = "date,player,map,start_side,kills,deaths,assists,mvps,won";
     var lines = matches.Select((m) => $"2026-09-27,{m.Player},{m.Map},{m.StartSide},{m.Kills},{m.Deaths},{m.Assists},{m.Mvps},{m.Won}"
     );
@@ -91,7 +150,7 @@ public static class MatchGenerator {
                     rng.Next(0, 5),     // mvps
                     rng.Next(2) == 0    // won
                 )
-                
+
         );
     }
 }
