@@ -12,6 +12,8 @@ valorant = DataSeries<ValorantMatch>.FromCsv(@"./data/valorant.csv", ParseValora
 cs2 = DataSeries<Cs2Match>.FromCsv(@"./data/cs2.csv", ParseCS2);
 lol = DataSeries<LolMatch>.FromCsv(@"./data/lol.csv", ParseLoL);
 
+
+
 if (args.Length == 0 || args.Contains("--help")) {
     Console.WriteLine("Commands :");
     Console.WriteLine("[--game valorant|cs2|lol]");
@@ -94,6 +96,12 @@ switch (game) {
 
 //ExportCs2("Maurice", raphaelValid, @"data\createdCs2Match.csv");
 //Console.WriteLine("Matchs inscrit dans le fichier.");
+
+// ex3.1
+//var wins = valorant.Filter(m => m.Won);
+//Console.WriteLine(valorant.Count); // 25 — inchangé
+//Console.WriteLine(wins.Count);
+
 
 Console.WriteLine("Fin du programme.");
 //Console.ReadKey();

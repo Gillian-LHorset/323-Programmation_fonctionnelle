@@ -24,8 +24,8 @@
         //public IEnumerable<T> Values => _data.Select(dp => dp.Value);
         public IEnumerable<T> Values => _data;
         
-        
-        DataSeries<T> Filter(Func<T, bool> predicate) => new DataSeries<T>(_data.Where(predicate));
+        // doc : Func<T, bool> car .Filter(x => x % 2 == 0) T = x et bool = x % 2
+        public DataSeries<T> Filter(Func<T, bool> predicate) => new DataSeries<T>(_data.Where(predicate));
         
 
         public override string ToString() {
