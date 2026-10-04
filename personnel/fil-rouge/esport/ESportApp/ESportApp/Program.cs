@@ -98,6 +98,7 @@ switch (game) {
 Console.WriteLine("Fin du programme.");
 //Console.ReadKey();
 
+//methods
 string? GetArgsValue(string flag) {
     int index = Array.IndexOf(args, flag);
     if (index < 0) {
