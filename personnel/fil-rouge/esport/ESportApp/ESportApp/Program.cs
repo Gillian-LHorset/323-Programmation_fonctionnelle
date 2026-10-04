@@ -8,9 +8,9 @@ DataSeries<ValorantMatch> valorant;
 DataSeries<Cs2Match> cs2;
 DataSeries<LolMatch> lol;
 
-valorant = DataSeries<ValorantMatch>.FromCsv(@"C:\Users\pq60soi\Desktop\323-Programmation_fonctionnelle\personnel\fil-rouge\esport\ESportApp\ESportApp\data\valorant.csv", ParseValorant);
-cs2 = DataSeries<Cs2Match>.FromCsv(@"C:\Users\pq60soi\Desktop\323-Programmation_fonctionnelle\personnel\fil-rouge\esport\ESportApp\ESportApp\data\cs2.csv", ParseCS2);
-lol = DataSeries<LolMatch>.FromCsv(@"C:\Users\pq60soi\Desktop\323-Programmation_fonctionnelle\personnel\fil-rouge\esport\ESportApp\ESportApp\data\Lol.csv", ParseLoL);
+valorant = DataSeries<ValorantMatch>.FromCsv(@"./data/valorant.csv", ParseValorant);
+cs2 = DataSeries<Cs2Match>.FromCsv(@"./data/cs2.csv", ParseCS2);
+lol = DataSeries<LolMatch>.FromCsv(@"./data/lol.csv", ParseLoL);
 
 if (args.Length == 0 || args.Contains("--help")) {
     Console.WriteLine("Commands :");
@@ -19,9 +19,9 @@ if (args.Length == 0 || args.Contains("--help")) {
     return;
 }
 
-string? game = args[Array.IndexOf(args, "--game") + 1];
-string? playerToGenerate = args[Array.IndexOf(args, "--generate") + 1];
-
+string? game = GetArgsValue("--game");
+string? playerToGenerate = GetArgsValue("--generate");
+Console.WriteLine(playerToGenerate);
 
 if (playerToGenerate is not null) {
     // ne génère uniquement des matchs cs2
@@ -97,6 +97,14 @@ switch (game) {
 
 Console.WriteLine("Fin du programme.");
 //Console.ReadKey();
+
+string? GetArgsValue(string flag) {
+    int index = Array.IndexOf(args, flag);
+    if (index < 0) {
+        return null;
+    }
+    return args[index + 1];
+}
 
 ValorantMatch ParseValorant(string[] cols) {
     return new ValorantMatch(
