@@ -18,11 +18,20 @@ if (args.Length == 0 || args.Contains("--help")) {
     Console.WriteLine("Commands :");
     Console.WriteLine("[--game valorant|cs2|lol]");
     Console.WriteLine("[--generate player]");
+    Console.WriteLine("[--filter wins|losses|all]");
     return;
 }
 
 string? game = GetArgsValue("--game");
 string? playerToGenerate = GetArgsValue("--generate");
+string filterMode = GetArgsValue("--filter") ?? "all";
+
+var filters = new Dictionary<string, Func<Cs2Match, bool>>
+{
+    ["wins"] = m => m.Won,
+    ["losses"] = m => !m.Won,
+    ["all"] = m => true,
+};
 
 if (playerToGenerate is not null) {
     // ne génère uniquement des matchs cs2
@@ -31,6 +40,8 @@ if (playerToGenerate is not null) {
     //Console.ReadKey();
     return;
 }
+
+cs2 = cs2.Filter(filters[filterMode]);
 
 switch (game) {
     case "valorant":
