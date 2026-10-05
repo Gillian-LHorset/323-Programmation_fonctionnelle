@@ -43,6 +43,8 @@ if (playerToGenerate is not null) {
 
 cs2 = cs2.Filter(filters[filterMode]);
 
+
+
 switch (game) {
     case "valorant":
         Console.WriteLine("Valorant match\ndate,player,agent,kills,deaths,assists,headshots,rounds_won,won");
@@ -122,6 +124,13 @@ switch (game) {
 //Console.WriteLine(cs2.HasAny(m => m.Kills > 20));
 
 //Console.WriteLine(cs2.AllMatch(m => m.Deaths >= 1));
+
+// ex 4.1
+//var kdaRaphael = cs2
+//    .Filter(m => m.Player == "Raphaël")
+//    .Transform(m => (m.Kills + m.Assists) / (double)(m.Deaths == 0 ? 1 : m.Deaths));
+
+//Console.WriteLine(string.Join(", ", kdaRaphael.Values.Select(v => v.ToString("F2"))));
 
 Console.WriteLine("Fin du programme.");
 //Console.ReadKey();

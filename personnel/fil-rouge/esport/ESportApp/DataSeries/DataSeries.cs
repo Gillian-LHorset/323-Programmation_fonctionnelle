@@ -33,6 +33,7 @@
         public bool AllMatch(Func<T, bool> predicate) => _data.All(predicate);
 
 
+        public DataSeries<TResult> Transform<TResult>(Func<T, TResult> mapper) => new DataSeries<TResult>(_data.Select(mapper));
 
 
         public override string ToString() {
