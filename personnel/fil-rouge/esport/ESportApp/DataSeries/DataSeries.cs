@@ -1,4 +1,6 @@
-﻿namespace DataSeries {
+﻿using System;
+
+namespace DataSeries {
     public class DataSeries<T> {
         private readonly IEnumerable<T> _data;
 
@@ -34,6 +36,17 @@
 
 
         public DataSeries<TResult> Transform<TResult>(Func<T, TResult> mapper) => new DataSeries<TResult>(_data.Select(mapper));
+
+        // transforme toutes les valeurs numérique entre 1 ou 0
+        public DataSeries<double> Normalize() {
+            var values = _data.Cast<double>().ToList();
+            var min = values.Min();
+            var max = values.Max();
+            var range = max - min;
+            return DataSeries<double>.From(
+                values.Select(v => range == 0 ? 0.0 : (v - min) / range)
+            );
+        }
 
 
         public override string ToString() {
