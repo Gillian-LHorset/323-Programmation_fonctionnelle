@@ -137,6 +137,13 @@ switch (game) {
 
 //Console.WriteLine(string.Join(", ", kdaRaphaelNorm.Values.Select(v => v.ToString("F2"))));
 
+// ex 4.3
+//int window = 3;
+//var smoothed = kdaRaphael.Smooth(window);
+//window = 10;
+
+//Console.WriteLine(string.Join(", ", smoothed.Values.Select(v => v.ToString("F2"))));
+
 Console.WriteLine("Fin du programme.");
 //Console.ReadKey();
 

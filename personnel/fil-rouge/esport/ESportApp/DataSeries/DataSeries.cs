@@ -48,6 +48,24 @@ namespace DataSeries {
             );
         }
 
+        public DataSeries<double> Smooth(int windowSize)
+        {
+            var values = _data.Cast<double>().ToList();
+            return DataSeries<double>.From(
+                Enumerable.Range(0, values.Count)
+                    .Select(i => {
+                        // on va chercher les "windowSize" dernières valeurs depuis l'indice de la valeur windowSize
+                            // ex : on va chercher les 3 dernières valeurs depuis 3
+                            // donc par ex : [10, 20, 50]
+                        // Gemini : Pour chaque élément d'indice i, on remonte jusqu'à windowSize valeurs en arrière (en incluant i)
+                        var window = values.Skip(Math.Max(0, i - windowSize + 1)).Take(windowSize);
+                        // puis on retourne la moyenne 
+                            // donc ex : 26.67
+                        return window.Average();
+                    })
+            );
+        }
+
 
         public override string ToString() {
             return $"DataSerie<{typeof(T).Name}>: {Count} points: {Environment.NewLine}{String.Join(Environment.NewLine, _data.Select(s => s).ToArray())}";
