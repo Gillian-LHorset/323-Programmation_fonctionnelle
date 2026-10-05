@@ -23,7 +23,6 @@ if (args.Length == 0 || args.Contains("--help")) {
 
 string? game = GetArgsValue("--game");
 string? playerToGenerate = GetArgsValue("--generate");
-Console.WriteLine(playerToGenerate);
 
 if (playerToGenerate is not null) {
     // ne génère uniquement des matchs cs2
@@ -102,6 +101,16 @@ switch (game) {
 //Console.WriteLine(valorant.Count); // 25 — inchangé
 //Console.WriteLine(wins.Count);
 
+// ex 3.2
+//cs2 = cs2.RemoveOutliers(m =>
+//    m.Kills + m.Assists <= 50 &&
+//    m.Deaths >= 1
+//);
+
+// ex 3.3
+//Console.WriteLine(cs2.HasAny(m => m.Kills > 20));
+
+//Console.WriteLine(cs2.AllMatch(m => m.Deaths >= 1));
 
 Console.WriteLine("Fin du programme.");
 //Console.ReadKey();

@@ -26,7 +26,14 @@
         
         // doc : Func<T, bool> car .Filter(x => x % 2 == 0) T = x et bool = x % 2
         public DataSeries<T> Filter(Func<T, bool> predicate) => new DataSeries<T>(_data.Where(predicate));
-        
+
+        public DataSeries<T> RemoveOutliers(Func<T, bool> isValid) => Filter(isValid);
+
+        public bool HasAny(Func<T, bool> predicate) => _data.Any(predicate);
+        public bool AllMatch(Func<T, bool> predicate) => _data.All(predicate);
+
+
+
 
         public override string ToString() {
             return $"DataSerie<{typeof(T).Name}>: {Count} points: {Environment.NewLine}{String.Join(Environment.NewLine, _data.Select(s => s).ToArray())}";
