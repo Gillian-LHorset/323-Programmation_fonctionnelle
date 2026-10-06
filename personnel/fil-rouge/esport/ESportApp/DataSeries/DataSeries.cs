@@ -66,6 +66,8 @@ namespace DataSeries {
             );
         }
 
+        public TResult Fold<TResult>(TResult seed, Func<TResult, T, TResult> combiner) => _data.Aggregate(seed, combiner);
+
 
         public override string ToString() {
             return $"DataSerie<{typeof(T).Name}>: {Count} points: {Environment.NewLine}{String.Join(Environment.NewLine, _data.Select(s => s).ToArray())}";

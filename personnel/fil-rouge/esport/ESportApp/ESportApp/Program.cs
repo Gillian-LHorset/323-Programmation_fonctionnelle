@@ -134,9 +134,9 @@ switch (game) {
 //Console.WriteLine(cs2.AllMatch(m => m.Deaths >= 1));
 
 // ex 4.1
-//var kdaRaphael = cs2
-//    .Filter(m => m.Player == "Raphaël")
-//    .Transform(m => (m.Kills + m.Assists) / (double)(m.Deaths == 0 ? 1 : m.Deaths));
+var kdaRaphael = cs2
+    .Filter(m => m.Player == "Raphaël")
+    .Transform(m => (m.Kills + m.Assists) / (double)(m.Deaths == 0 ? 1 : m.Deaths));
 
 //Console.WriteLine(string.Join(", ", kdaRaphael.Values.Select(v => v.ToString("F2"))));
 
@@ -151,6 +151,18 @@ switch (game) {
 //window = 10;
 
 //Console.WriteLine(string.Join(", ", smoothed.Values.Select(v => v.ToString("F2"))));
+
+// ex 5.1
+//var kdaValues = kdaRaphael; // DataSeries<double>
+
+//var sum = kdaValues.Fold(0.0, (acc, val) => acc + val);
+//var count = kdaValues.Fold(0, (acc, _) => acc + 1);
+//var best = kdaValues.Fold(double.MinValue, (acc, val) => val > acc ? val : acc);
+
+//var mean = sum / count;
+//Console.WriteLine($"KDA moyen de Léa : {mean:F2}");
+//Console.WriteLine($"KDA max de Léa   : {best:F2}");
+
 
 Console.WriteLine("Fin du programme.");
 //Console.ReadKey();
