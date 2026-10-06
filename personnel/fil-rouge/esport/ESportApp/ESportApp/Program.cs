@@ -19,15 +19,16 @@ if (args.Length == 0 || args.Contains("--help")) {
     Console.WriteLine("[--game valorant|cs2|lol]");
     Console.WriteLine("[--generate player]");
     Console.WriteLine("[--filter wins|losses|all]");
+    Console.WriteLine("[--stat kda|kills|assists]");
     return;
 }
 
 string? game = GetArgsValue("--game");
 string? playerToGenerate = GetArgsValue("--generate");
 string filterMode = GetArgsValue("--filter") ?? "all";
+string statType = GetArgsValue("--stat") ?? "kda";
 
-var filters = new Dictionary<string, Func<Cs2Match, bool>>
-{
+var filters = new Dictionary<string, Func<Cs2Match, bool>> {
     ["wins"] = m => m.Won,
     ["losses"] = m => !m.Won,
     ["all"] = m => true,
@@ -43,7 +44,14 @@ if (playerToGenerate is not null) {
 
 cs2 = cs2.Filter(filters[filterMode]);
 
+var selectors = new Dictionary<string, Func<Cs2Match, double>> {
+    ["kda"] = m => (m.Kills + m.Assists) / (double)(m.Deaths == 0 ? 1 : m.Deaths),
+    ["kills"] = m => m.Kills,
+    ["assists"] = m => m.Assists,
+};
 
+DataSeries<double> values = cs2.Transform(selectors[statType]);
+Console.WriteLine($"Stats de {statType} : \n" + values);
 
 switch (game) {
     case "valorant":
