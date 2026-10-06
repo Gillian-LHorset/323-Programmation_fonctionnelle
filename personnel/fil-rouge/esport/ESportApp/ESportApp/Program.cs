@@ -172,6 +172,9 @@ switch (game) {
 //foreach (var avg in progression)
 //    Console.WriteLine($"  {avg:F2}");
 
+// ex 5.3
+//var statsRaphael = kdaRaphael.Statistics();
+//Console.WriteLine($"Raphaël — KDA moy : {statsRaphael.Mean:F2}, écart-type : {statsRaphael.StdDev:F2}");
 
 Console.WriteLine("Fin du programme.");
 //Console.ReadKey();

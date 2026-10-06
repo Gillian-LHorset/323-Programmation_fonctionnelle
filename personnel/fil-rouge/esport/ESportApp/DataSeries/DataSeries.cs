@@ -2,12 +2,12 @@
 
 namespace DataSeries {
     public class DataSeries<T> {
-        private readonly IEnumerable<T> _data;
+        public readonly IEnumerable<T> _data;
 
         private DataSeries(IEnumerable<T> data) => _data = data;
 
         public static DataSeries<T> From(IEnumerable<T> source) => new DataSeries<T>(source);
-        
+
         public static DataSeries<T> FromCsv(string filename, Func<string[], T> parser) {
             List<T> data = new List<T>();
             try {
@@ -25,7 +25,7 @@ namespace DataSeries {
         public int Count => _data.Count();
         //public IEnumerable<T> Values => _data.Select(dp => dp.Value);
         public IEnumerable<T> Values => _data;
-        
+
         // doc : Func<T, bool> car .Filter(x => x % 2 == 0) T = x et bool = x % 2
         public DataSeries<T> Filter(Func<T, bool> predicate) => new DataSeries<T>(_data.Where(predicate));
 
@@ -48,19 +48,18 @@ namespace DataSeries {
             );
         }
 
-        public DataSeries<double> Smooth(int windowSize)
-        {
+        public DataSeries<double> Smooth(int windowSize) {
             var values = _data.Cast<double>().ToList();
             return DataSeries<double>.From(
                 Enumerable.Range(0, values.Count)
                     .Select(i => {
                         // on va chercher les "windowSize" dernières valeurs depuis l'indice de la valeur windowSize
-                            // ex : on va chercher les 3 dernières valeurs depuis 3
-                            // donc par ex : [10, 20, 50]
+                        // ex : on va chercher les 3 dernières valeurs depuis 3
+                        // donc par ex : [10, 20, 50]
                         // Gemini : Pour chaque élément d'indice i, on remonte jusqu'à windowSize valeurs en arrière (en incluant i)
                         var window = values.Skip(Math.Max(0, i - windowSize + 1)).Take(windowSize);
                         // puis on retourne la moyenne 
-                            // donc ex : 26.67
+                        // donc ex : 26.67
                         return window.Average();
                     })
             );
@@ -68,8 +67,7 @@ namespace DataSeries {
 
         public TResult Fold<TResult>(TResult seed, Func<TResult, T, TResult> combiner) => _data.Aggregate(seed, combiner);
 
-        public IEnumerable<DataSeries<T>> SlidingWindow(int size)
-        {
+        public IEnumerable<DataSeries<T>> SlidingWindow(int size) {
             var values = _data.ToList();
             return Enumerable.Range(0, Math.Max(0, values.Count - size + 1))
                 .Select(i => // extraire une fenêtre de `size` éléments à partir de l'indice i
@@ -80,5 +78,26 @@ namespace DataSeries {
         public override string ToString() {
             return $"DataSerie<{typeof(T).Name}>: {Count} points: {Environment.NewLine}{String.Join(Environment.NewLine, _data.Select(s => s).ToArray())}";
         }
+
+            public SeriesStats Statistics() {
+                var values = _data.Cast<double>().ToList();
+                var mean = values.Aggregate(0.0, (acc, v) => acc + v) / values.Count;
+                var variance = values.Aggregate(0.0, (acc, v) => acc + Math.Pow(v - mean, 2)) / values.Count;
+                return new SeriesStats(min: values.Min(), max: values.Max(),mean: mean, stdDev: Math.Sqrt(variance));
+            }
+        }
+    }
+
+    public class SeriesStats {
+        public double Min { get; }
+        public double Max { get; }
+        public double Mean { get; }
+        public double StdDev { get; }
+
+        public SeriesStats(double min, double max, double mean, double stdDev) {
+            Min = min;
+            Max = max;
+            Mean = mean;
+            StdDev = stdDev;
     }
 }
