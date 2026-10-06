@@ -68,6 +68,14 @@ namespace DataSeries {
 
         public TResult Fold<TResult>(TResult seed, Func<TResult, T, TResult> combiner) => _data.Aggregate(seed, combiner);
 
+        public IEnumerable<DataSeries<T>> SlidingWindow(int size)
+        {
+            var values = _data.ToList();
+            return Enumerable.Range(0, Math.Max(0, values.Count - size + 1))
+                .Select(i => // extraire une fenêtre de `size` éléments à partir de l'indice i
+                        DataSeries<T>.From(values.Skip(i).Take(size))
+                );
+        }
 
         public override string ToString() {
             return $"DataSerie<{typeof(T).Name}>: {Count} points: {Environment.NewLine}{String.Join(Environment.NewLine, _data.Select(s => s).ToArray())}";
